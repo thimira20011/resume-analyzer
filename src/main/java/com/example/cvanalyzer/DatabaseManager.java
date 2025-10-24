@@ -1,9 +1,9 @@
-package com.example.cvanalyzer;
+package main.java.com.example.cvanalyzer;
 
 import java.sql.*;
 import java.util.*;
 
-class DatabaseManager implements AutoCloseable {
+public class DatabaseManager implements AutoCloseable {
     private final Connection conn;
 
     public DatabaseManager(String jdbcUrl, String user, String pass) throws SQLException {
