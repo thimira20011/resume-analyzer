@@ -1,4 +1,9 @@
-<project ...>
+<project>
+    <properties>
+        <maven.compiler.source>23</maven.compiler.source>
+        <maven.compiler.target>23</maven.compiler.target>
+    </properties>
+</project> ...>
 <modelVersion>4.0.0</modelVersion>
 <groupId>com.example</groupId>
 <artifactId>cv-analyzer</artifactId>

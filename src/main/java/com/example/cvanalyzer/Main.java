@@ -9,7 +9,7 @@ public class Main {
         // configure DB connection
         String jdbcUrl = "jdbc:postgresql://localhost:5432/cvdb";
         String dbUser = "postgres";
-        String dbPass = "password";
+        String dbPass = "80204885";
 
         // minimal skills lexicon - expand this file in production
         List<String> skills = Arrays.asList("java","python","sql","javascript","spring","hibernate","html","css","react","angular","aws","docker","kubernetes","machine learning","data analysis");
