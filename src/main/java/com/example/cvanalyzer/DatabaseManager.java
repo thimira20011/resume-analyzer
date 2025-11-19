@@ -1,4 +1,4 @@
-package main.java.com.example.cvanalyzer;
+package com.example.cvanalyzer;
 
 import java.sql.*;
 import java.util.*;
@@ -27,7 +27,7 @@ public class DatabaseManager implements AutoCloseable {
         }
     }
 
-    public int findOrCreateSkill(String skill) throws SQLException {
+    public synchronized int findOrCreateSkill(String skill) throws SQLException {
         String sel = "SELECT id FROM skills WHERE name = ?";
         try (PreparedStatement ps = conn.prepareStatement(sel)) {
             ps.setString(1, skill);
@@ -83,8 +83,8 @@ public class DatabaseManager implements AutoCloseable {
         conn.commit();
     }
 
-    public void rollback() {
-        try { conn.rollback(); } catch (SQLException ignored) {}
+    public void rollback() throws SQLException {
+        conn.rollback();
     }
 
     public Connection getConnection() { return conn; }

@@ -38,31 +38,40 @@ public class Analyzer {
 
     // Simple match scoring: count overlapping skills between job required skill set and candidate
     public List<CandidateScore> rankCandidatesByJobSkills(Set<String> requiredSkills, int limit) throws SQLException {
-        // fetch all candidates + their skills
-        String sql = "SELECT c.id, c.full_name, s.name FROM candidates c " +
-                "LEFT JOIN candidate_skills cs ON c.id = cs.candidate_id " +
-                "LEFT JOIN skills s ON cs.skill_id = s.id " +
-                "ORDER BY c.id";
-        Map<Integer, CandidateScore> map = new LinkedHashMap<>();
-        try (Statement st = conn.createStatement()) {
-            ResultSet rs = st.executeQuery(sql);
+        if (requiredSkills == null || requiredSkills.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        String placeholders = String.join(",", Collections.nCopies(requiredSkills.size(), "?"));
+        String sql = "SELECT c.id, c.full_name, COUNT(s.id) AS skill_matches " +
+                "FROM candidates c " +
+                "JOIN candidate_skills cs ON c.id = cs.candidate_id " +
+                "JOIN skills s ON cs.skill_id = s.id " +
+                "WHERE s.name IN (" + placeholders + ") " +
+                "GROUP BY c.id, c.full_name " +
+                "ORDER BY skill_matches DESC " +
+                "LIMIT ?";
+
+        List<CandidateScore> rankedCandidates = new ArrayList<>();
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            int i = 1;
+            for (String skill : requiredSkills) {
+                ps.setString(i++, skill.toLowerCase());
+            }
+            ps.setInt(i, limit);
+
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int id = rs.getInt(1);
-                String name = rs.getString(2);
-                String skill = rs.getString(3);
-                CandidateScore cs = map.computeIfAbsent(id, k -> new CandidateScore(id, name));
-                if (skill != null) cs.skills.add(skill.toLowerCase());
+                int id = rs.getInt("id");
+                String name = rs.getString("full_name");
+                int score = rs.getInt("skill_matches");
+                CandidateScore candidateScore = new CandidateScore(id, name);
+                candidateScore.score = score;
+                // Note: individual skills are not loaded in this efficient version
+                rankedCandidates.add(candidateScore);
             }
         }
-        // score
-        List<CandidateScore> list = new ArrayList<>(map.values());
-        for (CandidateScore c : list) {
-            int matches = 0;
-            for (String r : requiredSkills) if (c.skills.contains(r.toLowerCase())) matches++;
-            c.score = matches; // crude; could use weights
-        }
-        list.sort(Comparator.comparingInt((CandidateScore c) -> c.score).reversed());
-        return list.subList(0, Math.min(limit, list.size()));
+        return rankedCandidates;
     }
 
     public static class CandidateScore {

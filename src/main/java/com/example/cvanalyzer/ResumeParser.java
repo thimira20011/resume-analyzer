@@ -1,4 +1,4 @@
-package main.java.com.example.cvanalyzer;
+package com.example.cvanalyzer;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
@@ -56,10 +56,13 @@ public class ResumeParser {
         m = Pattern.compile("(\\+?\\d{2,3}[\\s-]?)?(\\(?\\d{2,4}\\)?[\\s-]?)?\\d{3,4}[\\s-]?\\d{3,4}").matcher(text);
         if (m.find()) p.phone = m.group().trim();
 
-        // skills: naive: look for any lexicon terms in text
+        // skills: use word boundaries to avoid matching substrings
         String lowered = text.toLowerCase();
         for (String sk : skillsLexicon) {
-            if (lowered.contains(sk)) p.skills.add(sk);
+            Pattern skillPattern = Pattern.compile("\\b" + Pattern.quote(sk) + "\\b");
+            if (skillPattern.matcher(lowered).find()) {
+                p.skills.add(sk);
+            }
         }
 
         // experience estimation: find patterns like "X years", "X+ years"

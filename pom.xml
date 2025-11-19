@@ -1,34 +1,40 @@
 <project>
     <properties>
-        <maven.compiler.source>23</maven.compiler.source>
-        <maven.compiler.target>23</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
-</project> ...>
-<modelVersion>4.0.0</modelVersion>
-<groupId>com.example</groupId>
-<artifactId>cv-analyzer</artifactId>
-<version>1.0-SNAPSHOT</version>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.example</groupId>
+    <artifactId>cv-analyzer</artifactId>
+    <version>1.0-SNAPSHOT</version>
 
-<dependencies>
-<!-- JDBC driver: PostgreSQL (switch to mysql-connector-java for MySQL) -->
-<dependency>
-    <groupId>org.postgresql</groupId>
-    <artifactId>postgresql</artifactId>
-    <version>42.6.0</version>
-</dependency>
+    <dependencies>
+        <!-- JDBC driver: PostgreSQL (switch to mysql-connector-java for MySQL) -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.6.0</version>
+        </dependency>
 
-<!-- Apache PDFBox for reading PDFs -->
-<dependency>
-    <groupId>org.apache.pdfbox</groupId>
-    <artifactId>pdfbox</artifactId>
-    <version>3.0.0</version>
-</dependency>
+        <!-- Apache PDFBox for reading PDFs -->
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>3.0.0</version>
+        </dependency>
 
-<!-- Optional: Apache Commons Lang for string utils -->
-<dependency>
-    <groupId>org.apache.commons</groupId>
-    <artifactId>commons-lang3</artifactId>
-    <version>3.13.0</version>
-</dependency>
-</dependencies>
-        </project>
+        <!-- Optional: Apache Commons Lang for string utils -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.13.0</version>
+        </dependency>
+
+        <!-- Logging with Log4j -->
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+    </dependencies>
+</project>
